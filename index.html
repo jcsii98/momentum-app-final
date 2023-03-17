@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;700&family=Roboto:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <section id="section1" class="section-show pointer-events | intro-page">
+      <div class="form-container">
+        <form id="form-1" class="intro-form">
+          <label class="label no-highlight" for="name">
+            Hello, what's your name?
+          </label>
+          <input type="text" id="name" autocomplete="off" required />
+        </form>
+      </div>
+    </section>
+
+    <section id="section2" class="intro-page">
+      <div class="form-container">
+        <form id="form-2" class="intro-form">
+          <label
+            class="label no-highlight"
+            for="email"
+            id="email-greeting"
+          ></label>
+          <input type="email" id="email" autocomplete="off" />
+        </form>
+      </div>
+      <div class="button-container">
+        <button class="button" type="" id="button-1">
+          <img class="back-button" src="resources/back (1).png" />
+          <div class="button-text">Change name</div>
+        </button>
+        <button class="button" type="" id="button-2">
+          <div class="button-text">Skip for now</div>
+          <img class="back-button reverse-img" src="resources/back.png" />
+        </button>
+      </div>
+    </section>
+
+    <section id="section3">
+      <div class="container no-highlight text-center padding-block-900">
+        <h1 class="primary-heading fs-primary-heading">Welcome to Momentum</h1>
+        <p class="padding-block-900">
+          This is your space to find focus, calm, and inspiration with every new
+          tab you open.
+        </p>
+        <p class="padding-block-400">
+          Rule out distraction with simple tools that will help you achieve your
+          goals consistently—even when life gets busy.
+        </p>
+        <button id="button-3" class="button">Get Started!</button>
+      </div>
+    </section>
+
+    <section id="section4">
+      <div class="top-region"></div>
+      <div class="container no-highlight">
+        <!-- clock -->
+        <div class="clock-container">
+          <div class="clock" id="time"></div>
+          <!-- 24hr to 12hr format -->
+          <button
+            onclick="toggleFormat()"
+            class="clock-button"
+            id="clock-button"
+          >
+            <img src="resources/cycle.png" />
+          </button>
+        </div>
+
+        <!-- greeting -->
+
+        <div class="greeting pointer-events-none" id="greeting"></div>
+        <div class="today hidden" id="today">Today</div>
+        <div
+          id="todo-main-container"
+          class="todo-main-container fs-secondary-heading"
+        >
+          <form id="form-3" class="todo-form">
+            <label for="todo-input">What is your main focus for today?</label>
+            <input
+              id="todo-input"
+              type="text"
+              name="todo-input"
+              autocomplete="off"
+            />
+          </form>
+        </div>
+      </div>
+    </section>
+    <footer id="main-footer" class="hidden">
+      <blockquote class="no-highlight blockquote">
+        <p class="quote"></p>
+        <cite class="author"></cite>
+      </blockquote>
+      <div class="widget-container">
+        <div id="main-widget" class="main-widget hidden">
+          <div class="menu-wrapper">
+            <button id="menu-button" type="button" class="menu-button">
+              <img src="resources/dots.png" />
+            </button>
+            <div class="" id="menu-container">
+              <button id="button-7" type="button" class="menu-button">
+                <img src="resources/add.png" /></button
+              ><button id="button-8" type="button" class="menu-button">
+                <img src="resources/edit.png" /></button
+              ><button id="button-6" type="button" class="menu-button">
+                <img src="resources/delete.png" />
+              </button>
+            </div>
+          </div>
+
+          <h1 id="widget-header">Add a todo to start.</h1>
+          <form id="widget-form">
+            <input
+              type="text"
+              id="input-1"
+              placeholder="walk the dog..."
+              maxlength="30"
+              required
+            />
+            <button id="button-5" class="widget-button" type="submit">
+              Add
+            </button>
+          </form>
+          <ul class="" role="list" id="todo-list"></ul>
+        </div>
+        <button id="button-4" class="widget-button" type="button">Todo</button>
+      </div>
+    </footer>
+    <!-- todo widget -->
+    <script src="main.js"></script>
+  </body>
+</html>

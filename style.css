@@ -1,0 +1,597 @@
+:root {
+    --clr-accent-500: #;
+    --clr-accent-400: #;
+    --clr-accent-300: #;
+    --clr-accent-100: #;
+
+    --clr-primary-400: #;
+
+    --clr-neutral-900: #;
+    --clr-neutral-400: #;
+    --clr-neutral-100: #;
+
+    --clr-bg-400: #;
+
+    --ff-primary: 'Open Sans', sans-serif;
+    --ff-secondary: 'Roboto', sans-serif;
+
+    --ff-body: var(--ff-primary);
+    --ff-heading: var(--ff-secondary);
+
+    --fw-regular: 400;
+    --fw-bold: 700;
+    --fw-semi-bold: 500;
+
+    --fs-300: .8125rem;
+    --fs-400: .875rem;
+    --fs-500: .9375rem;
+    --fs-600: 1rem;
+    --fs-700: 1.875rem;
+    --fs-800: 2.5rem;
+    --fs-900: 3.5rem;
+
+    --fs-clock: 7rem;
+    --fs-body: var(--fs-400);
+    --fs-primary-heading: var(--fs-900);
+    --fs-secondary-heading: var(--fs-700);
+    --fs-nav: var(--fs-500);
+    --fs-button: var(--fs-300);
+    
+
+    --size-100: .25rem;
+    --size-200: .5rem;
+    --size-300: .75rem;
+    --size-400: 1rem;
+    --size-500: 1.5rem;
+    --size-600: 2rem;
+    --size-700: 3rem;
+    --size-800: 4rem;
+    --size-900: 5rem;
+    --size-1000: 7rem;
+}
+Box sizing rules *,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+/* Remove default margin */
+body,
+h1,
+h2,
+h3,
+h4,
+p,
+figure,
+dl,
+dd {
+    margin: 0;
+    padding: 0;
+}
+
+/* Remove list styles on ul, ol elements with a list role, which suggests default styling will be removed */
+ul[role='list'],
+ol[role='list'] {
+    list-style: none;
+}
+
+/* Set core root defaults */
+html:focus-within {
+    scroll-behavior: smooth;
+}
+
+/* Set core body defaults */
+body {
+    min-height: 100vh;
+    min-width: 100vw;
+    text-rendering: optimizeSpeed;
+    line-height: 1.5;
+    font-family: var(--ff-body);
+    color: white;
+    overflow: hidden;
+        background-image: url("/resources/maciek-sulkowski-VtQ7UGevG-I-unsplash.jpg");
+            background-position: center;
+            background-size: cover;
+            background-repeat: no-repeat;
+}
+
+/* A elements that don't have a class get default styles */
+a:not([class]) {
+    text-decoration-skip-ink: auto;
+}
+
+/* Make images easier to work with */
+img,
+picture {
+    max-width: 100%;
+    display: block;
+}
+
+/* Inherit fonts for inputs and buttons */
+input,
+button,
+textarea,
+select {
+    font: inherit;
+}
+
+/* Remove all animations, transitions and smooth scroll for people that prefer not to see them */
+@media (prefers-reduced-motion: reduce) {
+    html:focus-within {
+        scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+/* intro page */
+.intro-page {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    place-items: center;
+    line-height: 1.5;
+}
+.intro-top {
+    padding: var(--size-400);
+    height: 15%;
+}
+
+/* forms */
+form {
+    color: white;
+    font-size: var(--fs-900);
+    font-weight: var(--fw-regular);
+    font-family: var(--ff-heading);
+    text-align: center;
+}
+#form-3 {
+    z-index: 0;
+}
+#name {
+    border: none;
+    border-bottom: 2px solid white;
+}
+#email {
+    border: none;
+    border-bottom: 2px solid white;
+}
+#todo-input {
+    border: none;
+    border-bottom: 2px solid white;
+    padding: 0;
+}
+input {
+    width: 100%;
+    background: none;
+    padding: var(--size-300);
+    font-family: inherit;
+    font-size: inherit;
+    color: white;
+    text-align: center;
+}
+input:focus {
+    outline: none;
+}
+label {
+    display: block;
+}
+@media (max-width: 757px) {
+    form {
+        font-size: var(--fs-700);
+    }
+    input {
+        width: 80%;
+        padding: 0;
+    }
+}
+
+/* container */
+.container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    place-items: center;
+    width: auto;
+    text-align: center;
+}
+.form-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 50%;
+    text-align: center;
+    position: fixed;
+}
+.button-container {
+    display: flex;
+    justify-content: space-between;
+    bottom: 0;
+    position: fixed;
+}
+.clock-container {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    grid-template-rows: auto;
+    position: fixed;
+    top: 30%;
+    width: 60%;
+}
+.todo-main-container {
+    max-width: 80%;
+}
+
+@media (max-width: 757px) {
+    .button-container {
+        justify-content: space-around;
+    }
+    .container {
+        padding: 2em;
+    }
+}
+
+/* section */
+section {
+    min-height: 100vh;
+    min-width: 100vw;
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.section-show {
+    opacity: 1;
+    transition: opacity 0.5s ease-in-out;
+}
+
+/* footer */
+footer {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    flex-direction: column;
+    place-items: center;
+    width: 100vw;
+}
+/* clock */
+.clock {
+    grid-column: 2;
+    text-align: center;
+    font-weight: var(--fw-bold);
+    font-size: var(--fs-clock);
+    font-family: var(--ff-secondary);
+}
+.clock-button {
+    grid-column: 3;
+    width: 20%;
+    min-width: 30px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    filter: invert(100%);
+    opacity: 0.3;
+    transition: all 0.2s ease-in-out;
+}
+.clock-button:hover {
+    opacity: 1;
+    transform: scale(1.5);
+}
+
+/* greeting */
+
+.greeting {
+    font-size: 3rem;
+    font-weight: var(--fw-semi-bold);
+}
+@media (max-width: 757px) {
+    .greeting {
+        font-size: 2rem;
+    }
+}
+
+/* todo */
+
+#today {
+    padding-top: 2rem;
+    font-size: 1.3rem;
+    font-weight: var(--fw-regular);
+    font-family: var(--ff-secondary);
+}
+.todo-main-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding-top: 1rem;
+    width: 50%;
+}
+.todo-form {
+    font-size: 2.5rem;
+    font-weight: var(--fw-regular);
+}
+#todo-input {
+    font-size: var(--fs-700);
+    width: 100%;
+}
+@media (max-width: 757px) {
+    .todo-main-container {
+        padding-top: 1rem;
+        padding-bottom: 2rem;
+    }
+    .todo-form {
+        font-size: 2rem;
+    }
+}
+.checkbox-form {
+    width: auto;
+    z-index: 1000;
+    display: grid; 
+    grid-template-columns: 1fr 2fr 1fr;
+    place-items: center;
+}
+.checkbox-form label {
+    font-size: var(--fs-700);
+    text-align: center;
+}
+.checkbox-form input[type="checkbox"] {
+    margin-right: 0.5rem;
+    grid-column: 1;
+    width: 20px;
+    cursor: pointer;
+}
+.cb-form-container {
+    width: 80%;
+}
+
+#todo-edit {
+    width: auto;
+    border: none;
+    cursor: pointer;
+    background: none;
+}
+
+.todo-edit-btn {
+    width: auto;
+    max-width: 20px;
+    filter: invert(1);
+}
+
+/* quotes */
+.blockquote {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+    font-size: .8rem;
+    opacity: .7;
+}
+
+@media (max-width: 450px) {
+    cite {
+        display: none;
+    }
+}
+
+/* button */
+.button {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    background: none;
+    border: 1px solid white;
+    border-radius: 10px;
+    cursor: pointer;
+    margin: 2em;
+    color: inherit;
+    padding: auto;
+}
+@media (max-width: 757px){
+    .button {
+        width: auto;
+    }
+    .button-text {
+        display: none;
+    }
+}
+.back-button {
+    height: 10px;
+    filter: invert(100%);
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+/* top-region */
+.top-region {
+    display: block;
+    height: 300px;
+}
+
+/* widget */
+.widget-container {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    min-width: 300px;
+    font-size: var(--fs-300);
+    font-weight: var(--fw-regular);
+}
+
+.main-widget {
+    border: none;
+    border-radius: 10px;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: none;
+    text-align: center;
+    place-items: center;
+    grid-template-columns: 1fr 2fr 1fr;
+    grid-template-rows: 1fr 2fr;
+}
+
+.main-widget h1 {
+    grid-row-start: 1;
+    grid-row-end: 2;
+    grid-column-start: 2;
+    grid-column-end: 3;
+}
+
+.widget-button {
+    align-self: flex-end;
+    width: 50px;
+    border: none;
+    color: white;
+    background: none;
+    cursor: pointer;
+}
+
+.hidden {
+    display: none;
+}
+
+.menu-wrapper {
+    height: 3rem;
+    grid-column-start: 2;
+    grid-column-end: 3;
+    display: grid;
+}
+
+#menu-container {
+    display: none;
+    justify-content: space-between;
+}
+
+#menu-button {
+    justify-self: center;
+}
+
+#widget-form {
+    grid-row-start: 2;
+    grid-row-end: 3;
+    grid-column-start: 2;
+    font-size: inherit;
+    font-family: var(--ff-primary);
+    padding-top: 4rem;
+    display: flex;
+    flex-direction: column;
+    place-items: center;
+    text-align: center;
+    align-items: center;
+}
+#button-4 {
+    align-self: end;
+}
+.widget-button {
+    align-self: center;
+    opacity: 50%;
+}
+.widget-button:hover {
+    opacity: 100%;
+}
+#widget-form input {
+    border: none;
+    background: none;
+    padding-bottom: 1rem;
+    text-align: center;
+}
+#input-1::placeholder {
+    color: rgba(255, 255, 255, 0.549);
+}
+#input-1:focus::placeholder {
+    opacity: 0;
+}
+
+#todo-list {
+    grid-column-start: 2;
+}
+.menu-button {
+    background: none;
+    filter: invert(1);
+    border: none;
+    max-width: 30px;
+    cursor: pointer;
+    opacity: 50%;
+}
+.menu-button:hover {
+    opacity: 100;
+    transform: scale(1.2);
+    transition: all 0.2s ease-in-out;
+}
+.menu-wrapper {
+    grid-column-start: 3;
+}
+
+#todo-list {
+    align-self: start;
+    text-align: center;
+    padding-top: 10px;
+    margin: 0;
+    padding: 0;
+}
+
+/* utility classes */
+
+.completed {
+    text-decoration: line-through;
+}
+.opacity-0 {
+    opacity: 0;
+    transition: opacity .5s ease-in-out;
+}
+.no-highlight {
+    -webkit-user-select: none;
+    user-select: none;
+}
+.primary-heading {
+    font-style: var(--fs-primary-heading);
+    font-weight: var(--fw-bold);
+}
+.secondary-heading {
+    font-style: var(--fs-secondary-heading);
+    font-weight: var(--fw-semi-bold);
+}
+.hidden {
+    display: none;
+}
+.padding-block-900 {
+    padding-block: var(--size-900);
+}
+.padding-block-400 {
+    padding-block: var(--size-400);
+}
+.padding-top-900 {
+    padding-top: var(--size-900);
+}
+.padding-top-400 {
+    padding-top: var(--size-400);
+}
+.text-center {
+    text-align: center;
+}
+.fs-clock {
+    font-size: 7em;
+}
+.fs-primary-heading {
+    font-size: var(--fs-primary-heading);
+}
+.fs-secondary-heading {
+    font-size: var(--fs-secondary-heading);
+}
+.reverse-img {
+    transform: scaleX(-1);
+}
+.pointer-events {
+    pointer-events: auto;
+}
