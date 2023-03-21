@@ -12,19 +12,22 @@
     />
   </head>
   <body>
-    <section id="section1" class="section-show pointer-events | intro-page">
+    <section id="section1" class="section-show pointer-events intro-page">
       <div class="form-container">
+        <div class="top-region-form"></div>
         <form id="form-1" class="intro-form">
           <label class="label no-highlight" for="name">
             Hello, what's your name?
           </label>
           <input type="text" id="name" autocomplete="off" required />
         </form>
+        <div class="bottom-region-form"></div>
       </div>
     </section>
 
     <section id="section2" class="intro-page">
       <div class="form-container">
+        <div class="top-region-form"></div>
         <form id="form-2" class="intro-form">
           <label
             class="label no-highlight"
@@ -33,16 +36,17 @@
           ></label>
           <input type="email" id="email" autocomplete="off" />
         </form>
-      </div>
-      <div class="button-container">
-        <button class="button" type="" id="button-1">
-          <img class="back-button" src="resources/back (1).png" />
-          <div class="button-text">Change name</div>
-        </button>
-        <button class="button" type="" id="button-2">
-          <div class="button-text">Skip for now</div>
-          <img class="back-button reverse-img" src="resources/back.png" />
-        </button>
+        <div class="button-container">
+          <button class="button" type="" id="button-1">
+            <img class="back-button" src="resources/back (1).png" />
+            <div class="button-text">Change name</div>
+          </button>
+          <button class="button" type="" id="button-2">
+            <div class="button-text">Skip for now</div>
+            <img class="back-button reverse-img" src="resources/back.png" />
+          </button>
+        </div>
+        <div class="bottom-region-form"></div>
       </div>
     </section>
 
@@ -62,8 +66,8 @@
     </section>
 
     <section id="section4">
-      <div class="top-region"></div>
       <div class="container no-highlight">
+        <div class="top-region"></div>
         <!-- clock -->
         <div class="clock-container">
           <div class="clock" id="time"></div>
@@ -72,14 +76,25 @@
             onclick="toggleFormat()"
             class="clock-button"
             id="clock-button"
+            title="clock format"
           >
             <img src="resources/cycle.png" />
           </button>
         </div>
 
         <!-- greeting -->
-
-        <div class="greeting pointer-events-none" id="greeting"></div>
+        <div class="greeting-container">
+          <div class="empty-div"></div>
+          <div class="greeting pointer-events-none" id="greeting"></div>
+          <button
+            class="greeting-button"
+            onclick="showSection1()"
+            id="change-name"
+            title="change name"
+          >
+            <img src="resources/dots.png" />
+          </button>
+        </div>
         <div class="today hidden" id="today">Today</div>
         <div
           id="todo-main-container"
@@ -103,41 +118,54 @@
         <cite class="author"></cite>
       </blockquote>
       <div class="widget-container">
-        <div id="main-widget" class="main-widget hidden">
-          <div class="menu-wrapper">
-            <button id="menu-button" type="button" class="menu-button">
-              <img src="resources/dots.png" />
-            </button>
-            <div class="" id="menu-container">
-              <button id="button-7" type="button" class="menu-button">
+        <div id="main-widget" class="main-widget no-highlight">
+          <div id="widget-header" class="widget-header">
+            <div class="top-region-header">
+              <div class="header-items"><p>Today</p></div>
+              <div class="header-items">
+                <button id="app-menu-button" type="button" class="menu-button">
+                  <img src="resources/dots.png" />
+                </button>
+              </div>
+            </div>
+            <div class="-form-header">
+              <button id="app-button-4" type="button" class="dropmenu-button">
                 <img src="resources/add.png" /></button
-              ><button id="button-8" type="button" class="menu-button">
+              ><button id="app-button-3" type="button" class="dropmenu-button">
                 <img src="resources/edit.png" /></button
-              ><button id="button-6" type="button" class="menu-button">
+              ><button id="app-button-2" type="button" class="dropmenu-button">
                 <img src="resources/delete.png" />
               </button>
             </div>
           </div>
-
-          <h1 id="widget-header">Add a todo to start.</h1>
-          <form id="widget-form">
-            <input
-              type="text"
-              id="input-1"
-              placeholder="walk the dog..."
-              maxlength="30"
-              required
-            />
-            <button id="button-5" class="widget-button" type="submit">
-              Add
-            </button>
-          </form>
-          <ul class="" role="list" id="todo-list"></ul>
+          <div id="widget-body-1" class="widget-body-1">
+            <h2 class="muted">Add a todo to get started.</h2>
+            <button id="new-todo">New Todo</button>
+          </div>
+          <div class="padding-wrapper">
+            <div id="widget-body-2" class="widget-body-2">
+              <ul class="list-container" role="list" id="todo-list"></ul>
+              <div id="widget-form-container" class="widget-form-container">
+                <form id="widget-form" class="">
+                  <input
+                    type="text"
+                    id="input-1"
+                    placeholder="New Todo"
+                    maxlength="200"
+                    required
+                  />
+                </form>
+              </div>
+            </div>
+          </div>
         </div>
-        <button id="button-4" class="widget-button" type="button">Todo</button>
+        <button id="app-button-1" class="widget-button" type="button">
+          Todo
+        </button>
       </div>
     </footer>
     <!-- todo widget -->
     <script src="main.js"></script>
+    <script src="app.js"></script>
   </body>
 </html>
