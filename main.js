@@ -9,7 +9,7 @@ const form2 = document.getElementById("form-2");
 const nameInput = document.getElementById("name");
 const emailInput = document.getElementById("email");
 const footer = document.getElementById('main-footer');
-
+let todoItem = JSON.parse(localStorage.getItem('todoItem')) || [];
 function checkNameInLocal() {
   const name = localStorage.getItem("name");
   if (name === null || name === "0") {
@@ -19,6 +19,7 @@ function checkNameInLocal() {
     showSection4();
   }
 }
+
 function showSection1() {
   section4.classList.remove('section-show', 'pointer-events');
   footer.classList.add('hidden');
@@ -55,29 +56,14 @@ function showSection4() {
   } else {
     document.getElementById("greeting").textContent = `Good evening, ${name}.`;
   }
-  const changeName = document.getElementById('change-name')
-  const form3 = document.getElementById("form-3");
-  const element = document.getElementById('cb-form-container');
-  console.log(typeof element);
-  console.log(typeof form3);
-  function swapForm1() {
-    const outerContainer = document.getElementById('todo-main-container');
-    const element = document.getElementById('cb-form-container');
-    outerContainer.replaceChild(form3, element);
-    document.getElementById('todo-input').value = '';
-  };
-  changeName.addEventListener('click', () => {
-    mainWidget.style.display = 'none';
-    today.classList.add('hidden');
-    swapForm1();
-  })
+  displayTodoToday();
 }
+
 function showSection5() {
   section5.classList.add('section-show', 'pointer-events');
 }
 
 window.addEventListener("load", checkNameInLocal);
-
 form1.addEventListener("submit", (event) => {
   // prevent refreshing when submitted
   event.preventDefault();
@@ -163,111 +149,218 @@ setInterval(displayTime, 1000);
 const quote = document.querySelector("blockquote p");
 const cite = document.querySelector("blockquote cite");
 
-// Define a function to fetch the quote
-async function updateQuote() {
-  // Fetch a random quote from the Quotable API
-  const response = await fetch("https://api.quotable.io/random");
+let allQuotes = [];
+
+async function getQuotes() {
+  // Fetch a list of quotes from the Quotable API
+  const response = await fetch("https://api.quotable.io/quotes?limit=100");
   const data = await response.json();
+  
   if (response.ok) {
-    // Update DOM elements
-    quote.textContent = `"${data.content}"`;
-    cite.textContent = `- ${data.author}`;
+    // Save all the quotes in a global variable
+    allQuotes = data.results;
   } else {
-    quote.textContent = "An error occured";
     console.log(data);
   }
-};
+}
+
+function getRandomQuote(minLength, maxLength) {
+  // Filter the list of quotes based on length
+  const filteredQuotes = allQuotes.filter(quote => {
+    return quote.content.length >= minLength && quote.content.length <= maxLength;
+  });
+  
+  // Select a random quote from the filtered list
+  const randomQuote = filteredQuotes[Math.floor(Math.random() * filteredQuotes.length)];
+  return randomQuote;
+}
+
+async function updateQuote(minLength = 0, maxLength = 60) {
+  // Ensure that all quotes have been loaded before attempting to filter them
+  if (allQuotes.length === 0) {
+    await getQuotes();
+  }
+  
+  // Get a random quote that meets the length criteria
+  const quoteData = getRandomQuote(minLength, maxLength);
+  
+  // Update DOM elements
+  quote.textContent = `"${quoteData.content}"`;
+  cite.textContent = `- ${quoteData.author}`;
+}
 
 updateQuote();
 
 setInterval(updateQuote, 60000);
 
-// to-do for today
-
-
-
-document.addEventListener("DOMContentLoaded", function() {
-
-  const form3 = document.getElementById('form-3');
-  form3.addEventListener("submit", (event) => {
-    event.preventDefault(); // Prevent default form submission behavior
-
-    const input = document.getElementById("todo-input");
-    const label = input.value;
-
-    const cbFormContainer = document.createElement("div");
-    const todoMainContainer = document.getElementById('todo-main-container');
-    todoMainContainer.appendChild(cbFormContainer);
-
-    cbFormContainer.id = "cb-form-container";
-    cbFormContainer.setAttribute("class", "cb-form-container");
-
-    const checkboxForm = document.createElement("form");
-    checkboxForm.id = "checkbox-form";
-    cbFormContainer.appendChild(checkboxForm);
-    console.log("Appending checkboxForm to cbFormContainer...")
-
-    // checkbox
-    const checkbox = document.createElement("input");
-    checkbox.id = "checkbox";
-    checkbox.setAttribute("type", "checkbox");
-    checkbox.setAttribute("name", "todo-checkbox");
-    checkbox.setAttribute("class", "opacity-0");
-    checkboxForm.appendChild(checkbox);
-    // checkbox effect
-    const checkboxEffect = document.getElementById('checkbox');
-    checkboxEffect.addEventListener('change', function() {
-      if (this.checked) {
-        checkboxLabel.classList.add('line-through');
-      } else {
-        checkboxLabel.classList.remove('line-through');
-      };
-    })
-
-    // label
-    const checkboxLabel = document.createElement("label");
-    checkboxLabel.id = "checkbox-label";
-    checkboxForm.appendChild(checkboxLabel);
-
-    // edit button
-    const todoEdit = document.createElement("button");
-    todoEdit.textContent = "";
-    todoEdit.id = "todo-edit";
-    todoEdit.setAttribute("class", "opacity-0");
-    todoEdit.setAttribute("type", "button");
-    checkboxForm.appendChild(todoEdit);
-    // edit function
-    todoEdit.addEventListener('click', () => {
-      todoMainContainer.replaceChild(form3, cbFormContainer);
-      today.classList.add("hidden");
-    })
-
-    const todoEditPng = document.createElement("img");
-    todoEditPng.id = "todo-edit-png";
-    todoEditPng.setAttribute("class", "todo-edit-btn")
-    todoEditPng.setAttribute("src", "/resources/edit.png");
-    todoEdit.appendChild(todoEditPng);
-
-    checkboxLabel.appendChild(document.createTextNode(label));
-
-    todoMainContainer.replaceChild(cbFormContainer, form3); // Replace original form with checkbox form
-
-    today.classList.remove("hidden");
-    checkboxForm.setAttribute("class", "checkbox-form");
-
-    // to-do hover effect
-    checkboxForm.addEventListener('mouseenter', function() {
-      console.log('mouse is over element');
-      checkbox.classList.remove('opacity-0');
-      todoEdit.classList.remove('opacity-0');
-    });
-    checkboxForm.addEventListener('mouseleave', function() {
-      console.log('mouse is off element');
-      checkbox.classList.add('opacity-0');
-      todoEdit.classList.add('opacity-0');
-    });
-  });
+// quote hover effect
+const quoteContainer = document.getElementById('blockquote');
+quoteContainer.addEventListener('mouseenter', () => {
+    quote.style.transform = 'translateY(-10px)';
+    quote.style.transition = 'all .3s ease-in-out';
+    cite.style.opacity = '60%';
+    cite.style.transform = 'translateY(3px)';
+    cite.style.transition = 'all .3s ease-in-out';
 });
+quoteContainer.addEventListener('mouseleave', () => {
+    quote.style.transform = 'translateY(10px)';
+    quote.style.transition = 'all .3s ease-in-out';
+    cite.style.opacity = '0%';
+    cite.style.transform = 'translateY(-3px)';
+    cite.style.transition = 'all .3s ease-in-out';
+});
+
+
+// to-do for today
+  const noTodo = document.getElementById('form-3');
+  const yesTodo = document.getElementById('cb-form-container');
+  let todoToday = JSON.parse(localStorage.getItem('todoToday')) || [];
+  const todoTodayInput = document.getElementById('todo-input');
+  // todo submission 
+  noTodo.addEventListener('submit', function(event) {
+    event.preventDefault();
+    const value = todoTodayInput.value.trim();
+    if (value) {
+      todoToday.push(value);
+      localStorage.setItem('todoToday', JSON.stringify(todoToday));
+      console.log(todoToday);
+    }
+    displayTodoToday();
+  });
+
+  // reset list 
+  function resetTodoToday() {
+  console.log('resetTodoToday called');
+  // Empty the array
+  today.classList.add('hidden');
+  todoToday = [];
+
+  // Remove the item from local storage
+  localStorage.removeItem('todoToday');
+  const todoInput = document.getElementById('todo-input');
+  todoInput.value ='';
+}
+
+// Store the empty array in localStorage
+localStorage.setItem("todoToday", JSON.stringify(todoToday));
+  // displayTodoToday
+  function displayTodoToday() {
+    const todoTodayList = document.createElement('div');
+    todoTodayList.setAttribute('id', 'todo-today-list');
+    const todoTodayContainer = document.getElementById('todo-main-container');
+    todoTodayContainer.appendChild(todoTodayList);
+
+    if (todoToday.length === 0) {
+      console.log('no todos for today');
+      today.classList.add('hidden');
+    } else {
+        noTodo.style.display = 'none';
+        const today = document.getElementById('today');
+        today.classList.remove('hidden');
+        const listItem = document.createElement('div');
+        listItem.setAttribute('contenteditable', 'false');
+        listItem.id = 'list-item-text';
+        listItem.textContent = todoToday;
+        todoTodayList.appendChild(listItem);
+
+        const todayCheckbox = document.createElement('input');
+        todayCheckbox.setAttribute('type', 'checkbox');
+        todayCheckbox.setAttribute('class', 'opacity-0');
+        todayCheckbox.setAttribute('id', 'today-checkbox');
+        todoTodayList.appendChild(listItem);
+        todoTodayList.insertBefore(todayCheckbox, todoTodayList.firstChild);
+
+        // load checkbox saved state
+        var storedValue = localStorage.getItem('todayCheckboxState');const checkboxEffect = document.getElementById('list-item-text')
+        if (storedValue) {
+          todayCheckbox.checked = true;
+          
+          checkboxEffect.classList.add('line-through');
+        } else {
+          todayCheckbox.checked = false;
+          checkboxEffect.classList.remove('line-through');
+        }
+
+        const todoTodayEdit = document.createElement('button');
+        todoTodayEdit.setAttribute('type', 'button');
+        todoTodayEdit.setAttribute('id', 'today-button')
+        todoTodayEdit.setAttribute('class', 'opacity-0');
+        todoTodayList.appendChild(todoTodayEdit);
+          const textElem = document.getElementById('list-item-text');
+          todoTodayEdit.addEventListener('click', () => {
+            textElem.setAttribute('contenteditable', 'true');
+            textElem.focus();
+          })
+    // edit img
+      const editImg = document.createElement('img');
+      editImg.setAttribute('src', 'resources/edit.png');
+      todoTodayEdit.appendChild(editImg);
+          // event listener when editing
+          const listItemText = document.getElementById('list-item-text');
+listItemText.addEventListener('input', () => {
+  if (listItemText.textContent.trim() === '') {
+    // Remove the only item in the array
+    todoToday.pop();
+    console.log('todoToday item removed');
+
+    // Remove todoTodayList from the DOM
+    const todoTodayList = document.getElementById('todo-today-list');
+    todoTodayList.remove();
+    console.log('todoTodayList removed');
+
+    // Reset the todo today section
+    resetTodoToday();
+
+    // Show the "Add to Today's Tasks" form
+    const form3 = document.getElementById('form-3');
+    form3.style.display = 'block';
+
+    console.log('input deleted');
+  } else {
+    // Empty the todoToday array
+    todoToday.length = 0;
+
+    // Push the new value into the array
+    todoToday.push(listItemText.value);
+
+    // Update the local storage with the new value
+    localStorage.setItem('todoToday', JSON.stringify(todoToday));
+  }
+});
+
+          // editable stop
+          textElem.addEventListener('blur', () => {
+            textElem.setAttribute('disabled', 'true')
+          });
+          textElem.addEventListener('keydown', (event) => {
+              if (event.key === 'Enter') {
+                  textElem.setAttribute('disabled', 'true');
+                }
+          })
+
+          //hover effect
+          todoTodayList.addEventListener('mouseenter', () => {
+            todoTodayEdit.classList.remove('opacity-0');
+            todayCheckbox.classList.remove('opacity-0');
+          });
+          todoTodayList.addEventListener('mouseleave', () => {
+            todoTodayEdit.classList.add('opacity-0');
+            todayCheckbox.classList.add('opacity-0');
+          });
+          // checkbox effect
+          const checkbox = document.getElementById('today-checkbox');
+          checkbox.addEventListener('change', () => {
+            if (checkbox.checked) {
+            localStorage.setItem('todayCheckboxState', checkbox.checked);
+            console.log("Stored value: " + localStorage.getItem('todayCheckboxState'));
+            textElem.classList.add('line-through');
+          } else {
+            textElem.classList.remove('line-through');
+            localStorage.removeItem('todayCheckboxState');
+          }
+          })
+    }
+  }
 
 // background 
 const backgrounds = [

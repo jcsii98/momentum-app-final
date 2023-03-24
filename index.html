@@ -95,11 +95,12 @@
             <img src="resources/dots.png" />
           </button>
         </div>
-        <div class="today hidden" id="today">Today</div>
+
         <div
           id="todo-main-container"
           class="todo-main-container fs-secondary-heading"
         >
+          <div class="today hidden" id="today">Today</div>
           <form id="form-3" class="todo-form">
             <label for="todo-input">What is your main focus for today?</label>
             <input
@@ -111,59 +112,75 @@
           </form>
         </div>
       </div>
-    </section>
-    <footer id="main-footer" class="hidden">
-      <blockquote class="no-highlight blockquote">
-        <p class="quote"></p>
-        <cite class="author"></cite>
-      </blockquote>
-      <div class="widget-container">
-        <div id="main-widget" class="main-widget no-highlight">
-          <div id="widget-header" class="widget-header">
-            <div class="top-region-header">
-              <div class="header-items"><p>Today</p></div>
-              <div class="header-items">
-                <button id="app-menu-button" type="button" class="menu-button">
-                  <img src="resources/dots.png" />
+      <footer id="main-footer" class="hidden">
+        <div class="left-region-footer"></div>
+        <blockquote id="blockquote" class="no-highlight blockquote">
+          <p class="quote"></p>
+          <cite class="author shifted"></cite>
+        </blockquote>
+        <div class="widget-container">
+          <div id="main-widget" class="main-widget no-highlight">
+            <div id="widget-header" class="widget-header">
+              <div class="top-region-header">
+                <div class="header-items"><p>Today</p></div>
+                <div class="header-items">
+                  <button
+                    id="app-menu-button"
+                    type="button"
+                    class="menu-button"
+                  >
+                    <img src="resources/dots.png" />
+                  </button>
+                </div>
+              </div>
+              <div class="-form-header">
+                <button id="app-button-4" type="button" class="dropmenu-button">
+                  <img src="resources/add.png" /></button
+                ><button
+                  id="app-button-3"
+                  type="button"
+                  class="dropmenu-button"
+                >
+                  <img src="resources/edit.png" /></button
+                ><button
+                  id="app-button-2"
+                  type="button"
+                  class="dropmenu-button"
+                >
+                  <img src="resources/delete.png" />
                 </button>
               </div>
             </div>
-            <div class="-form-header">
-              <button id="app-button-4" type="button" class="dropmenu-button">
-                <img src="resources/add.png" /></button
-              ><button id="app-button-3" type="button" class="dropmenu-button">
-                <img src="resources/edit.png" /></button
-              ><button id="app-button-2" type="button" class="dropmenu-button">
-                <img src="resources/delete.png" />
-              </button>
+            <div id="widget-body-1" class="widget-body-1">
+              <h2 class="muted">Add a todo to get started.</h2>
+              <button id="new-todo">New Todo</button>
             </div>
-          </div>
-          <div id="widget-body-1" class="widget-body-1">
-            <h2 class="muted">Add a todo to get started.</h2>
-            <button id="new-todo">New Todo</button>
-          </div>
-          <div class="padding-wrapper">
-            <div id="widget-body-2" class="widget-body-2">
-              <ul class="list-container" role="list" id="todo-list"></ul>
-              <div id="widget-form-container" class="widget-form-container">
-                <form id="widget-form" class="">
-                  <input
-                    type="text"
-                    id="input-1"
-                    placeholder="New Todo"
-                    maxlength="200"
-                    required
-                  />
-                </form>
+            <div class="padding-wrapper">
+              <div id="widget-body-2" class="widget-body-2">
+                <ul class="list-container" role="list" id="todo-list"></ul>
+                <div id="widget-form-container" class="widget-form-container">
+                  <form id="widget-form" class="">
+                    <input
+                      type="text"
+                      id="input-1"
+                      placeholder="New Todo"
+                      maxlength="200"
+                      required
+                    />
+                  </form>
+                </div>
               </div>
             </div>
           </div>
         </div>
-        <button id="app-button-1" class="widget-button" type="button">
-          Todo
-        </button>
-      </div>
-    </footer>
+        <div class="todo-button-container">
+          <button id="app-button-1" class="widget-button" type="button">
+            Todo
+          </button>
+        </div>
+      </footer>
+    </section>
+
     <!-- todo widget -->
     <script src="main.js"></script>
     <script src="app.js"></script>
