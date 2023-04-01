@@ -1,151 +1,372 @@
-const section1 = document.querySelector('#section1');
-const section2 = document.querySelector('#section2');
-const section3 = document.querySelector('#section3');
-const section4 = document.querySelector('#section4');
-const section5 = document.querySelector('#section5');
-const forms = document.querySelectorAll('form');
-const form1 = document.getElementById("form-1");
-const form2 = document.getElementById("form-2");
-const nameInput = document.getElementById("name");
-const emailInput = document.getElementById("email");
-const footer = document.getElementById('main-footer');
-let todoItem = JSON.parse(localStorage.getItem('todoItem')) || [];
-function checkNameInLocal() {
-  const name = localStorage.getItem("name");
-  if (name === null || name === "0") {
-    showSection1();
-  } else {
-    section1.classList.remove('section-show', 'pointer-events');
-    showSection4();
+// get DOM elements
+const timeText = document.querySelector(".time-text");
+const focusText = document.querySelector(".focus-text");
+const focusInput = document.querySelector(".focus-input");
+const weatherText = document.querySelector(".weather-text");
+const focus = document.querySelector(".focus");
+const focusButton = document.getElementById("focus-button");
+const focusCheckbox = document.getElementById("focus-checkbox");
+
+// set background image
+var backgrounds = [
+  "url('/bg-img/1.jpg')",
+  "url('/bg-img/2.jpg')",
+  "url('/bg-img/4.jpg')",
+  "url('/bg-img/5.jpg')",
+];
+
+var currentIndex = 0;
+function changeBackground() {
+  currentIndex++;
+  if (currentIndex >= backgrounds.length) {
+    currentIndex = 0;
   }
+  document.body.style.backgroundImage = backgrounds[currentIndex];
 }
+setInterval(changeBackground, 5000); // Call the function every 1 minute
 
-function showSection1() {
-  section4.classList.remove('section-show', 'pointer-events');
-  footer.classList.add('hidden');
-  section2.classList.remove('section-show', 'pointer-events');
-  section1.classList.add('section-show', 'pointer-events');
-  nameInput.value = "";
-  resetItems();
+function clearLocalStorage() {
+  localStorage.clear();
+  focusCheckbox.checked = false;
+  focusText.style.textDecoration = "none";
+  updateFocus();
+  console.log("local storage cleared");
+  location.reload();
 }
-function showSection2() {
-  section1.classList.remove('section-show', 'pointer-events');
-  section2.classList.add('section-show', 'pointer-events');
-  emailInput.value = "";
-  const name = localStorage.getItem("name");
-  let emailString = `What's your email, ${name}?`;
-  document.getElementById("email-greeting").innerHTML = emailString;
-}
-function showSection3() {
-  section2.classList.remove('section-show', 'pointer-events');
-  section3.classList.add('section-show', 'pointer-events');
-}
-function showSection4() {
-  section3.classList.remove('section-show', 'pointer-events');
-  section4.classList.add('section-show', 'pointer-events');
-
-  footer.classList.remove('hidden');
-  const name = localStorage.getItem("name");
-  const currentTime = new Date();
-  const currentHour = currentTime.getHours();
-
-  if (currentHour < 12) {
-    document.getElementById("greeting").textContent = `Good morning, ${name}.`;
-  } else if (currentHour < 18) {
-    document.getElementById("greeting").textContent = `Good afternoon, ${name}.`;
-  } else {
-    document.getElementById("greeting").textContent = `Good evening, ${name}.`;
-  }
-  displayTodoToday();
-}
-
-function showSection5() {
-  section5.classList.add('section-show', 'pointer-events');
-}
-
-window.addEventListener("load", checkNameInLocal);
-form1.addEventListener("submit", (event) => {
-  // prevent refreshing when submitted
-  event.preventDefault();
-
-  //hide form1
-  section2.classList.add('section-show', 'pointer-events');
-  // show form2
-  section1.classList.remove('section-show', 'pointer-events');
-
-  // concatenate name into email-greeting 
-
-  const name = document.getElementById("name").value;
-  localStorage.setItem("name", name);
-  let emailString = `What's your email, ${name}?`;
-  document.getElementById("email-greeting").innerHTML = emailString;
-
-  // set focus to email input field
-  form2.focus();
-});
-
-form2.addEventListener("submit", (event) => {
-  event.preventDefault();
-
-  section2.classList.remove('section-show', 'pointer-events');
-  section3.classList.add('section-show', 'pointer-events');
-})
-
-const button1 = document.getElementById('button-1');
-const button2 = document.getElementById('button-2');
-const button3 = document.getElementById('button-3');
-
-button1.addEventListener('click', showSection1);
-
-button2.addEventListener('click', showSection3);
-
-button3.addEventListener('click', showSection4);
-
 
 // time API
+let is12HourFormat = true;
+const currentTimeElement = document.getElementById("current-time");
+const toggleButton = document.getElementById("toggle-button");
 
-let is12Hour = false;
+async function updateTime() {
+  const response = await fetch(
+    "http://worldtimeapi.org/api/timezone/Asia/Manila"
+  );
+  const json = await response.json();
+  const dateTimeString = json.datetime;
 
-function formatTime(date) {
-  const formatter = new Intl.DateTimeFormat('en-US', {
-    hourCycle: is12Hour ? "h11" : "h23",
-    hour12: is12Hour,
-    hour: 'numeric',
-    minute: 'numeric',
-  });
-  return formatter.format(date).replace(/\s?[AP]M/, ''); // remove "AM" or "PM"
+  const options = {
+    hour: is12HourFormat ? "numeric" : "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: is12HourFormat,
+  };
+
+  const formattedTime = new Intl.DateTimeFormat(undefined, options).format(
+    new Date(dateTimeString)
+  );
+  currentTimeElement.textContent = formattedTime;
 }
 
-async function getCurrentTime() {
-  try {
-    const response = await fetch('https://worldtimeapi.org/api/ip');
-    const data = await response.json();
-    return new Date(data.datetime);
-  } catch (error) {
-    console.error(error);
-    // Handle the error here, e.g. display an error message to the user.
-    return null;
+toggleButton.addEventListener("click", function () {
+  is12HourFormat = !is12HourFormat;
+  updateTime();
+});
+
+setInterval(updateTime, 1000);
+
+// update focus text and input value
+function updateFocus() {
+  if (localStorage.getItem("focus")) {
+    focusText.textContent = localStorage.getItem("focus");
+    focusInput.value = localStorage.getItem("focus");
+    focusInput.classList.add("hidden", "opacity-0");
+  }
+
+  if (localStorage.getItem("checkboxState")) {
+    focusCheckbox.checked = JSON.parse(localStorage.getItem("checkboxState"));
+    if (focusCheckbox.checked) {
+      focusText.style.textDecoration = "line-through";
+    } else {
+      focusText.style.textDecoration = "none";
+    }
+  }
+}
+updateFocus();
+focusInput.addEventListener("keyup", function (event) {
+  if (event.keyCode === 13 && event.target.value.trim() !== "") {
+    localStorage.setItem("focus", event.target.value);
+    updateFocus();
+    focusButton.style.display = "block";
+    focusCheckbox.style.display = "block";
+  } else if (event.keyCode === 13 && event.target.value.trim() === "") {
+    localStorage.removeItem("focus");
+    updateFocus();
+    console.log("focus removed");
+  }
+});
+
+focusCheckbox.addEventListener("change", function () {
+  localStorage.setItem("checkboxState", focusCheckbox.checked);
+  if (focusCheckbox.checked) {
+    focusText.style.textDecoration = "line-through";
+  } else {
+    focusText.style.textDecoration = "none";
+  }
+});
+
+// focus edit
+focusButton.addEventListener("click", () => {
+  localStorage.removeItem("checkboxState");
+  focusCheckbox.checked = false;
+  focusText.style.textDecoration = "none";
+  focusText.textContent = "What's your main focus for today?";
+  focusInput.classList.remove("hidden", "opacity-0");
+  focusButton.style.display = "none";
+  focusCheckbox.style.display = "none";
+});
+
+// focus hover effect
+focus.addEventListener("mouseenter", (event) => {
+  event.preventDefault();
+  focusCheckbox.classList.remove("opacity-0");
+  focusButton.classList.remove("opacity-0");
+});
+focus.addEventListener("mouseleave", (event) => {
+  event.preventDefault();
+  focusCheckbox.classList.add("opacity-0");
+  focusButton.classList.add("opacity-0");
+});
+
+// get DOM elements
+const todoList = document.querySelector(".todo-list");
+const todoInput = document.querySelector(".todo-input");
+const todoWidget = document.getElementById("todo-widget");
+
+// set up todo items
+let todos = JSON.parse(localStorage.getItem("todos")) || [];
+
+function renderTodos() {
+  todoList.innerHTML = "";
+  todos.forEach((todo, index) => {
+    const todoItem = document.createElement("li");
+    todoItem.classList.add("todo-item");
+    todoItem.innerHTML = `
+      <input type="checkbox" id="todo${index}" ${
+      todo.completed ? "checked" : ""
+    }>
+      <label for="todo${index}" class="todo-text ${
+      todo.completed ? "completed" : ""
+    }">${todo.text}</label>
+      <button class="edit-button"><img src="resources/pen-clip.png" /></button>
+      <button class="delete-button"><img src="resources/cross-circle.png" /></button>
+    `;
+    const todoCheckbox = todoItem.querySelector("input[type='checkbox']");
+    const todoText = todoItem.querySelector(".todo-text");
+    const editButton = todoItem.querySelector(".edit-button");
+    const deleteButton = todoItem.querySelector(".delete-button");
+    todoCheckbox.addEventListener("change", function () {
+      todo.completed = this.checked;
+      if (todo.completed) {
+        todoText.classList.add("completed");
+      } else {
+        todoText.classList.remove("completed");
+      }
+      saveTodos();
+    });
+    editButton.addEventListener("click", function () {
+      const input = document.createElement("input");
+      input.type = "text";
+      input.value = todo.text;
+      todoItem.replaceChild(input, todoText);
+      input.focus();
+      input.addEventListener("blur", function () {
+        todo.text = input.value.trim();
+        if (todo.text) {
+          todoItem.replaceChild(todoText, input);
+          todoText.textContent = todo.text;
+          saveTodos();
+        } else {
+          todos.splice(index, 1);
+          renderTodos();
+          saveTodos();
+        }
+      });
+      input.addEventListener("keyup", function (event) {
+        if (event.keyCode === 13) {
+          todo.text = input.value.trim();
+          if (todo.text) {
+            todoItem.replaceChild(todoText, input);
+            todoText.textContent = todo.text;
+            saveTodos();
+          } else {
+            todos.splice(index, 1);
+            renderTodos();
+            saveTodos();
+          }
+        }
+      });
+    });
+    deleteButton.addEventListener("click", function () {
+      todos.splice(index, 1);
+      renderTodos();
+      saveTodos();
+    });
+    todoList.appendChild(todoItem);
+  });
+}
+renderTodos();
+
+// display todo widget
+function displayWidget() {
+  if (todoWidget.style.display === "none") {
+    todoWidget.style.display = "flex";
+  } else {
+    todoWidget.style.display = "none";
   }
 }
 
-function displayTime() {
-  getCurrentTime().then(time => {
-    if (time !== null) {
-      const formattedTime = formatTime(time);
-      const timeEl = document.getElementById('time');
-      timeEl.textContent = formattedTime;
-    }
-  });
+const todoButton = document.getElementById("todo-button");
+todoButton.addEventListener("click", displayWidget);
+
+// add new todo item
+function addTodo() {
+  const text = todoInput.value.trim();
+  if (text) {
+    todos.push({ text, completed: false });
+    renderTodos();
+    saveTodos();
+    todoInput.value = "";
+  }
+}
+todoInput.addEventListener("keyup", function (event) {
+  if (event.keyCode === 13) {
+    addTodo();
+  }
+});
+
+// save todo items to local storage
+function saveTodos() {
+  localStorage.setItem("todos", JSON.stringify(todos));
 }
 
-function toggleFormat() {
-  is12Hour = !is12Hour;
+// intro page
+// declare DOM elements
+const container1 = document.getElementById("container-1");
+const container2 = document.getElementById("container-2");
+const container3 = document.getElementById("container-3");
+
+const formName = document.getElementById("form-name");
+const formEmail = document.getElementById("form-email");
+const nameInput = document.getElementById("name-input");
+const emailInput = document.getElementById("email-input");
+const nameFormContainer = document.getElementById("name-form-container");
+const emailFormContainer = document.getElementById("email-form-container");
+
+// check if user has logged in with name
+function checkNameInLocalStorage() {
+  const name = localStorage.getItem("name");
+  if (name !== null) {
+    // do something if the "name" key is present in localStorage
+    showContainer3();
+    console.log("Name is present in localStorage:", name);
+  } else {
+    // do something else if the "name" key is not present in localStorage
+    console.log("Name is not present in localStorage");
+  }
+}
+window.addEventListener("load", checkNameInLocalStorage);
+
+// formName eventlistener to proceed to formEmail
+formName.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const name = nameInput.value;
+  localStorage.setItem("name", name); // store name in localStorage
+  console.log(name);
+  nameInput.value = ""; // reset the value of the input element
+
+  showEmailFormContainer();
+});
+
+function showEmailFormContainer() {
+  const name = localStorage.getItem("name");
+  const emailLabel = document.getElementById("email-label");
+  emailLabel.textContent = `What's your email, ${name}`;
+
+  // fade out the name form container
+  nameFormContainer.classList.add("opacity-0");
+  setTimeout(() => {
+    nameFormContainer.classList.add("hidden");
+  }, 500); // delay the transition for 500 milliseconds
+
+  // fade in the email form container
+  setTimeout(() => {
+    emailFormContainer.classList.remove("hidden");
+    emailFormContainer.classList.add("opacity-1");
+    emailInput.focus();
+  }, 500); // delay the transition for 500 milliseconds
 }
 
-setInterval(displayTime, 1000);
+// formEmail eventlistener to proceed to container-2
+formEmail.addEventListener("submit", (event) => {
+  event.preventDefault();
+
+  container1.classList.add("opacity-0");
+  setTimeout(() => {
+    container1.classList.add("hidden");
+  }, 500);
+
+  setTimeout(() => {
+    container2.classList.remove("hidden", "opacity-0");
+    container2.classList.add("opacity-1");
+  }, 500);
+});
+
+// proceed button eventlistener to show container-3
+// declare container-3 elements
+const mainGreeting = document.getElementById("main-greeting");
+const proceedButton = document.getElementById("proceed-button");
+proceedButton.addEventListener("click", (event) => {
+  event.preventDefault();
+
+  showContainer3();
+});
+
+function showContainer3() {
+  const widget = document.getElementById("todo-widget");
+  widget.style.display = "none";
+  container1.classList.add("opacity-0", "hidden");
+  container2.classList.add("opacity-0");
+  setTimeout(() => {
+    container2.classList.add("hidden");
+  }, 500);
+
+  setTimeout(() => {
+    container3.classList.remove("hidden", "opacity-0");
+    container3.classList.add("opacity-1");
+  }, 500);
+  updateContainerTime();
+  updateContainerFocus();
+}
+
+function updateContainerTime() {
+  const timeOfDay = new Date();
+  const currentHour = timeOfDay.getHours();
+  const name = localStorage.getItem("name");
+  const mainGreeting = document.getElementById("main-greeting");
+  if (currentHour < 12) {
+    mainGreeting.textContent = `Good morning, ${name}`;
+  } else if (currentHour < 18) {
+    mainGreeting.textContent = `Good afternoon, ${name}`;
+  } else {
+    mainGreeting.textContent = `Good evening, ${name}`;
+  }
+}
+
+function updateContainerFocus() {
+  if (localStorage.getItem("focus")) {
+    console.log("focus is present");
+    focusCheckbox.style.display = "block";
+    focusButton.style.display = "block";
+  } else {
+    console.log("focus is not present");
+    focusCheckbox.style.display = "none";
+    focusButton.style.display = "none";
+  }
+}
 
 // quotes API
-
 const quote = document.querySelector("blockquote p");
 const cite = document.querySelector("blockquote cite");
 
@@ -155,7 +376,7 @@ async function getQuotes() {
   // Fetch a list of quotes from the Quotable API
   const response = await fetch("https://api.quotable.io/quotes?limit=100");
   const data = await response.json();
-  
+
   if (response.ok) {
     // Save all the quotes in a global variable
     allQuotes = data.results;
@@ -166,12 +387,15 @@ async function getQuotes() {
 
 function getRandomQuote(minLength, maxLength) {
   // Filter the list of quotes based on length
-  const filteredQuotes = allQuotes.filter(quote => {
-    return quote.content.length >= minLength && quote.content.length <= maxLength;
+  const filteredQuotes = allQuotes.filter((quote) => {
+    return (
+      quote.content.length >= minLength && quote.content.length <= maxLength
+    );
   });
-  
+
   // Select a random quote from the filtered list
-  const randomQuote = filteredQuotes[Math.floor(Math.random() * filteredQuotes.length)];
+  const randomQuote =
+    filteredQuotes[Math.floor(Math.random() * filteredQuotes.length)];
   return randomQuote;
 }
 
@@ -180,13 +404,14 @@ async function updateQuote(minLength = 0, maxLength = 60) {
   if (allQuotes.length === 0) {
     await getQuotes();
   }
-  
+
   // Get a random quote that meets the length criteria
   const quoteData = getRandomQuote(minLength, maxLength);
-  
+
   // Update DOM elements
   quote.textContent = `"${quoteData.content}"`;
   cite.textContent = `- ${quoteData.author}`;
+  cite.style.opacity = "0%";
 }
 
 updateQuote();
@@ -194,195 +419,20 @@ updateQuote();
 setInterval(updateQuote, 60000);
 
 // quote hover effect
-const quoteContainer = document.getElementById('blockquote');
-quoteContainer.addEventListener('mouseenter', () => {
-    quote.style.transform = 'translateY(-10px)';
-    quote.style.transition = 'all .3s ease-in-out';
-    cite.style.opacity = '60%';
-    cite.style.transform = 'translateY(3px)';
-    cite.style.transition = 'all .3s ease-in-out';
+const quoteContainer = document.getElementById("blockquote");
+quoteContainer.addEventListener("mouseenter", () => {
+  quote.style.transform = "translateY(-5px)";
+  quote.style.transition = "all .3s ease-in-out";
+  cite.style.opacity = "70%";
+  cite.style.transform = "translateY(3px)";
+  cite.style.transition = "all .3s ease-in-out";
+  console.log("mouse-enter");
 });
-quoteContainer.addEventListener('mouseleave', () => {
-    quote.style.transform = 'translateY(10px)';
-    quote.style.transition = 'all .3s ease-in-out';
-    cite.style.opacity = '0%';
-    cite.style.transform = 'translateY(-3px)';
-    cite.style.transition = 'all .3s ease-in-out';
+quoteContainer.addEventListener("mouseleave", () => {
+  quote.style.transform = "translateY(10px)";
+  quote.style.transition = "all .3s ease-in-out";
+  cite.style.opacity = "0%";
+  cite.style.transform = "translateY(-3px)";
+  cite.style.transition = "all .3s ease-in-out";
+  console.log("mouse-leave");
 });
-
-
-// to-do for today
-  const noTodo = document.getElementById('form-3');
-  const yesTodo = document.getElementById('cb-form-container');
-  let todoToday = JSON.parse(localStorage.getItem('todoToday')) || [];
-  const todoTodayInput = document.getElementById('todo-input');
-  // todo submission 
-  noTodo.addEventListener('submit', function(event) {
-    event.preventDefault();
-    const value = todoTodayInput.value.trim();
-    if (value) {
-      todoToday.push(value);
-      localStorage.setItem('todoToday', JSON.stringify(todoToday));
-      console.log(todoToday);
-    }
-    displayTodoToday();
-  });
-
-  // reset list 
-  function resetTodoToday() {
-  console.log('resetTodoToday called');
-  // Empty the array
-  today.classList.add('hidden');
-  todoToday = [];
-
-  // Remove the item from local storage
-  localStorage.removeItem('todoToday');
-  const todoInput = document.getElementById('todo-input');
-  todoInput.value ='';
-}
-
-// Store the empty array in localStorage
-localStorage.setItem("todoToday", JSON.stringify(todoToday));
-  // displayTodoToday
-  function displayTodoToday() {
-    const todoTodayList = document.createElement('div');
-    todoTodayList.setAttribute('id', 'todo-today-list');
-    const todoTodayContainer = document.getElementById('todo-main-container');
-    todoTodayContainer.appendChild(todoTodayList);
-
-    if (todoToday.length === 0) {
-      console.log('no todos for today');
-      today.classList.add('hidden');
-    } else {
-        noTodo.style.display = 'none';
-        const today = document.getElementById('today');
-        today.classList.remove('hidden');
-        const listItem = document.createElement('div');
-        listItem.setAttribute('contenteditable', 'false');
-        listItem.id = 'list-item-text';
-        listItem.textContent = todoToday;
-        todoTodayList.appendChild(listItem);
-
-        const todayCheckbox = document.createElement('input');
-        todayCheckbox.setAttribute('type', 'checkbox');
-        todayCheckbox.setAttribute('class', 'opacity-0');
-        todayCheckbox.setAttribute('id', 'today-checkbox');
-        todoTodayList.appendChild(listItem);
-        todoTodayList.insertBefore(todayCheckbox, todoTodayList.firstChild);
-
-        // load checkbox saved state
-        var storedValue = localStorage.getItem('todayCheckboxState');const checkboxEffect = document.getElementById('list-item-text')
-        if (storedValue) {
-          todayCheckbox.checked = true;
-          
-          checkboxEffect.classList.add('line-through');
-        } else {
-          todayCheckbox.checked = false;
-          checkboxEffect.classList.remove('line-through');
-        }
-
-        const todoTodayEdit = document.createElement('button');
-        todoTodayEdit.setAttribute('type', 'button');
-        todoTodayEdit.setAttribute('id', 'today-button')
-        todoTodayEdit.setAttribute('class', 'opacity-0');
-        todoTodayList.appendChild(todoTodayEdit);
-          const textElem = document.getElementById('list-item-text');
-          todoTodayEdit.addEventListener('click', () => {
-            textElem.setAttribute('contenteditable', 'true');
-            textElem.focus();
-          })
-    // edit img
-      const editImg = document.createElement('img');
-      editImg.setAttribute('src', 'resources/edit.png');
-      todoTodayEdit.appendChild(editImg);
-          // event listener when editing
-          const listItemText = document.getElementById('list-item-text');
-listItemText.addEventListener('input', () => {
-  if (listItemText.textContent.trim() === '') {
-    // Remove the only item in the array
-    todoToday.pop();
-    console.log('todoToday item removed');
-
-    // Remove todoTodayList from the DOM
-    const todoTodayList = document.getElementById('todo-today-list');
-    todoTodayList.remove();
-    console.log('todoTodayList removed');
-
-    // Reset the todo today section
-    resetTodoToday();
-
-    // Show the "Add to Today's Tasks" form
-    const form3 = document.getElementById('form-3');
-    form3.style.display = 'block';
-
-    console.log('input deleted');
-  } else {
-    // Empty the todoToday array
-    todoToday.length = 0;
-
-    // Push the new value into the array
-    todoToday.push(listItemText.value);
-
-    // Update the local storage with the new value
-    localStorage.setItem('todoToday', JSON.stringify(todoToday));
-  }
-});
-
-          // editable stop
-          textElem.addEventListener('blur', () => {
-            textElem.setAttribute('disabled', 'true')
-          });
-          textElem.addEventListener('keydown', (event) => {
-              if (event.key === 'Enter') {
-                  textElem.setAttribute('disabled', 'true');
-                }
-          })
-
-          //hover effect
-          todoTodayList.addEventListener('mouseenter', () => {
-            todoTodayEdit.classList.remove('opacity-0');
-            todayCheckbox.classList.remove('opacity-0');
-          });
-          todoTodayList.addEventListener('mouseleave', () => {
-            todoTodayEdit.classList.add('opacity-0');
-            todayCheckbox.classList.add('opacity-0');
-          });
-          // checkbox effect
-          const checkbox = document.getElementById('today-checkbox');
-          checkbox.addEventListener('change', () => {
-            if (checkbox.checked) {
-            localStorage.setItem('todayCheckboxState', checkbox.checked);
-            console.log("Stored value: " + localStorage.getItem('todayCheckboxState'));
-            textElem.classList.add('line-through');
-          } else {
-            textElem.classList.remove('line-through');
-            localStorage.removeItem('todayCheckboxState');
-          }
-          })
-    }
-  }
-
-// background 
-const backgrounds = [
-   "resources/bg1.jpg",
-   "resources/bg2.jpg",
-   "resources/bg3.jpg",
-   "resources/bg4.jpg"
-];
-
-const slideTime = 20000;
-let i = 0;
-
-function changeBackground() {
-  console.log("Changing background...");
-  document.body.style.backgroundImage = "url(" + backgrounds[i] + ")";
-  i++;
-  if (i >= backgrounds.length) {
-    i = 0;
-  }
-  console.log("Background set to: ", backgrounds[i]);
-  setTimeout(changeBackground, slideTime);
-}
-
-console.log("Starting background slideshow...");
-changeBackground();

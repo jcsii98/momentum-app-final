@@ -12,177 +12,87 @@
     />
   </head>
   <body>
-    <section id="section1" class="section-show pointer-events intro-page">
-      <div class="form-container">
-        <div class="top-region-form"></div>
-        <form id="form-1" class="intro-form">
-          <label class="label no-highlight" for="name">
-            Hello, what's your name?
-          </label>
-          <input type="text" id="name" autocomplete="off" required />
+    <div class="background"></div>
+    <div id="container-1" class="intro-container">
+      <div id="name-form-container" class="form-container">
+        <form id="form-name" class="intro-form-container">
+          <label for="name">Hi, what's your name?</label>
+          <input
+            type="text"
+            id="name-input"
+            name="name"
+            autocomplete="off"
+            required
+          />
         </form>
-        <div class="bottom-region-form"></div>
       </div>
-    </section>
-
-    <section id="section2" class="intro-page">
-      <div class="form-container">
-        <div class="top-region-form"></div>
-        <form id="form-2" class="intro-form">
-          <label
-            class="label no-highlight"
-            for="email"
-            id="email-greeting"
-          ></label>
-          <input type="email" id="email" autocomplete="off" />
+      <div id="email-form-container" class="form-container hidden opacity-0">
+        <form id="form-email" class="intro-form-container">
+          <label id="email-label" for="email"></label>
+          <input type="text" id="email-input" name="email" autocomplete="off" />
         </form>
+      </div>
+    </div>
+    <div id="container-2" class="container hidden opacity-0">
+      <div class="tour-container">
+        <div class="h1">This is Momentum</div>
+        <div class="wide-text">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita quia
+          perspiciatis eaque rem qui, nesciunt inventore aliquam! Optio
+          doloremque, debitis, veniam officiis reprehenderit animi iure
+          accusamus possimus eaque repellat sed.
+        </div>
         <div class="button-container">
-          <button class="button" type="" id="button-1">
-            <img class="back-button" src="resources/back (1).png" />
-            <div class="button-text">Change name</div>
+          <button type="button" id="back-button" class="button">Go Back</button>
+          <button type="button" id="proceed-button" class="button">
+            Proceed
           </button>
-          <button class="button" type="" id="button-2">
-            <div class="button-text">Skip for now</div>
-            <img class="back-button reverse-img" src="resources/back.png" />
-          </button>
-        </div>
-        <div class="bottom-region-form"></div>
-      </div>
-    </section>
-
-    <section id="section3">
-      <div class="container no-highlight text-center padding-block-900">
-        <h1 class="primary-heading fs-primary-heading">Welcome to Momentum</h1>
-        <p class="padding-block-900">
-          This is your space to find focus, calm, and inspiration with every new
-          tab you open.
-        </p>
-        <p class="padding-block-400">
-          Rule out distraction with simple tools that will help you achieve your
-          goals consistently—even when life gets busy.
-        </p>
-        <button id="button-3" class="button">Get Started!</button>
-      </div>
-    </section>
-
-    <section id="section4">
-      <div class="container no-highlight">
-        <div class="top-region"></div>
-        <!-- clock -->
-        <div class="clock-container">
-          <div class="clock" id="time"></div>
-          <!-- 24hr to 12hr format -->
-          <button
-            onclick="toggleFormat()"
-            class="clock-button"
-            id="clock-button"
-            title="clock format"
-          >
-            <img src="resources/cycle.png" />
-          </button>
-        </div>
-
-        <!-- greeting -->
-        <div class="greeting-container">
-          <div class="empty-div"></div>
-          <div class="greeting pointer-events-none" id="greeting"></div>
-          <button
-            class="greeting-button"
-            onclick="showSection1()"
-            id="change-name"
-            title="change name"
-          >
-            <img src="resources/dots.png" />
-          </button>
-        </div>
-
-        <div
-          id="todo-main-container"
-          class="todo-main-container fs-secondary-heading"
-        >
-          <div class="today hidden" id="today">Today</div>
-          <form id="form-3" class="todo-form">
-            <label for="todo-input">What is your main focus for today?</label>
-            <input
-              id="todo-input"
-              type="text"
-              name="todo-input"
-              autocomplete="off"
-            />
-          </form>
         </div>
       </div>
-      <footer id="main-footer" class="hidden">
+    </div>
+    <div id="container-3" class="container hidden opacity-0">
+      <div class="time">
+        <div id="current-time" class="time-text"></div>
+        <button type="button" id="toggle-button">
+          <img src="resources/time-twenty-four.png" />
+        </button>
+      </div>
+      <div class="greeting-container">
+        <div id="main-greeting"></div>
+        <button class="img-button" type="button" onclick="clearLocalStorage()">
+          <img src="resources/refresh.png" />
+        </button>
+      </div>
+
+      <div class="focus">
+        <div class="flex-container">
+          <input class="focus-hover" type="checkbox" id="focus-checkbox" />
+          <div class="focus-text">What is your main focus for today?</div>
+          <button class="focus-hover" type="button" id="focus-button">
+            <img src="resources/pen-clip.png" />
+          </button>
+        </div>
+        <input type="text" class="focus-input" required />
+      </div>
+      <div class="todo" id="todo-widget">
+        <h2 class="todo-header">Todo</h2>
+        <ul class="todo-list"></ul>
+        <input
+          type="text"
+          class="todo-input"
+          placeholder="Add a new todo..."
+          required
+        />
+      </div>
+      <div class="footer">
         <div class="left-region-footer"></div>
         <blockquote id="blockquote" class="no-highlight blockquote">
           <p class="quote"></p>
           <cite class="author shifted"></cite>
         </blockquote>
-        <div class="widget-container">
-          <div id="main-widget" class="main-widget no-highlight">
-            <div id="widget-header" class="widget-header">
-              <div class="top-region-header">
-                <div class="header-items"><p>Today</p></div>
-                <div class="header-items">
-                  <button
-                    id="app-menu-button"
-                    type="button"
-                    class="menu-button"
-                  >
-                    <img src="resources/dots.png" />
-                  </button>
-                </div>
-              </div>
-              <div class="-form-header">
-                <button id="app-button-4" type="button" class="dropmenu-button">
-                  <img src="resources/add.png" /></button
-                ><button
-                  id="app-button-3"
-                  type="button"
-                  class="dropmenu-button"
-                >
-                  <img src="resources/edit.png" /></button
-                ><button
-                  id="app-button-2"
-                  type="button"
-                  class="dropmenu-button"
-                >
-                  <img src="resources/delete.png" />
-                </button>
-              </div>
-            </div>
-            <div id="widget-body-1" class="widget-body-1">
-              <h2 class="muted">Add a todo to get started.</h2>
-              <button id="new-todo">New Todo</button>
-            </div>
-            <div class="padding-wrapper">
-              <div id="widget-body-2" class="widget-body-2">
-                <ul class="list-container" role="list" id="todo-list"></ul>
-                <div id="widget-form-container" class="widget-form-container">
-                  <form id="widget-form" class="">
-                    <input
-                      type="text"
-                      id="input-1"
-                      placeholder="New Todo"
-                      maxlength="200"
-                      required
-                    />
-                  </form>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="todo-button-container">
-          <button id="app-button-1" class="widget-button" type="button">
-            Todo
-          </button>
-        </div>
-      </footer>
-    </section>
-
-    <!-- todo widget -->
+        <button type="button" id="todo-button">Todo</button>
+      </div>
+    </div>
     <script src="main.js"></script>
-    <script src="app.js"></script>
   </body>
 </html>
